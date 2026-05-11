@@ -1,0 +1,43 @@
+{
+    "id": "app",
+    "type": "root",
+    "name": "Moja Go REST API Aplikacija",
+    "properties": {
+        "title": "Admin Panel Go",
+        "version": "1.0",
+        "default_layout": "sidebar"
+    },
+    "groups": [
+        {
+            "target_group_id": "group_journals",
+            "type": "group",
+            "display_name": "Žurnali",
+            "display_order": 1
+        },
+        {
+            "target_group_id": "group_catalogs",
+            "type": "group",
+            "display_name": "Katalozi",
+            "display_order": 2
+        },
+        {
+            "target_group_id": "group_details",
+            "type": "group",
+            "display_name": "Detalji",
+            "display_order": 3
+        },
+        {
+            "target_group_id": "group_reports",
+            "type": "group",
+            "display_name": "Izveštaji",
+            "display_order": 4
+        },
+        {
+            "target_group_id": "group_system",
+            "type": "group",
+            "display_name": "System",
+            "display_order": 5
+        }
+    ],
+    "is_table": false
+}

@@ -1,0 +1,66 @@
+{
+    "id": "module_products",
+    "name": "Proizvodi",
+    "type": "module",
+    "db_table_name": "products",
+    "endpoint": "/api/modules/products",
+    "display_field": "name",
+    "can_create": true,
+    "can_read": true,
+    "can_update": true,
+    "can_delete": true,
+    "columns": [
+        {
+            "id": "col_products_id",
+            "name": "ID",
+            "db_column_name": "id",
+            "type": "integer",
+            "is_primary_key": true,
+            "is_visible": false
+        },
+        {
+            "id": "col_products_name",
+            "name": "Naziv Proizvoda",
+            "db_column_name": "name",
+            "type": "string",
+            "is_editable": true,
+            "is_visible": true,
+            "validation": "required"
+        },
+        {
+            "id": "col_products_price",
+            "name": "Cena",
+            "db_column_name": "price",
+            "type": "float",
+            "is_editable": true,
+            "is_visible": true,
+            "validation": "min:0"
+        },
+        {
+            "id": "col_products_description",
+            "name": "Opis",
+            "db_column_name": "description",
+            "type": "string",
+            "is_editable": true,
+            "is_visible": true,
+            "validation": ""
+        }
+    ],
+    "sub_modules": [
+        {
+            "target_module_id": "module_comments",
+            "parent_key_field": "id",
+            "child_foreign_key_field": "parent_id",
+            "display_name": "Komentari proizvoda",
+            "display_order": 1
+        },
+        {
+            "target_module_id": "module_product_categories",
+            "parent_key_field": "id",
+            "child_foreign_key_field": "product_id",
+            "display_name": "Kategorije proizvoda",
+            "display_order": 2
+        }
+    ],
+    "is_table": true
+}

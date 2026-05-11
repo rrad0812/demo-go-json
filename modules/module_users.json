@@ -1,0 +1,63 @@
+{
+    "id": "module_users",
+    "name": "Korisnici",
+    "type": "module",
+    "db_table_name": "users",
+    "endpoint": "/api/modules/users",
+    "display_field": "username",
+    "can_create": true,
+    "can_read": true,
+    "can_update": true,
+    "can_delete": true,
+    "columns": [
+        {
+            "id": "col_users_id",
+            "name": "ID",
+            "db_column_name": "id",
+            "type": "integer",
+            "is_primary_key": true,
+            "is_visible": false
+        },
+        {
+            "id": "col_users_username",
+            "name": "Korisničko Ime",
+            "db_column_name": "username",
+            "type": "string",
+            "is_editable": true,
+            "is_visible": true,
+            "is_unique": true,
+            "validation": "required,min:3,max:50",
+            "is_searchable": true,
+            "is_sortable": true
+        },
+        {
+            "id": "col_users_email",
+            "name": "Email",
+            "db_column_name": "email",
+            "type": "string",
+            "is_editable": true,
+            "is_visible": true,
+            "is_unique": true,
+            "validation": "required,email"
+        },
+        {
+            "id": "col_users_password",
+            "name": "Lozinka (heš)",
+            "db_column_name": "password_hash",
+            "type": "string",
+            "is_editable": false,
+            "is_visible": false,
+            "is_read_only": true
+        },
+        {
+            "id": "col_users_is_admin",
+            "name": "Administrator",
+            "db_column_name": "is_admin",
+            "type": "boolean",
+            "is_editable": true,
+            "is_visible": true,
+            "default_value": false
+        }
+    ],
+    "is_table": true
+}

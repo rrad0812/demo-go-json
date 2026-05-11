@@ -1,0 +1,28 @@
+{
+    "id": "module_app_settings",
+    "name": "Podešavanja",
+    "type": "system",
+    "endpoint": "/admin/app-settings",
+    "properties": {
+        "description": "Globalna podešavanja sistema"
+    },
+    "columns": [
+        {
+            "id": "col_setting_name",
+            "name": "Naziv",
+            "db_column_name": "setting_name",
+            "type": "string",
+            "is_editable": true,
+            "is_visible": true
+        },
+        {
+            "id": "col_setting_value",
+            "name": "Vrednost",
+            "db_column_name": "setting_value",
+            "type": "string",
+            "is_editable": true,
+            "is_visible": true
+        }
+    ],
+    "is_table": false
+}

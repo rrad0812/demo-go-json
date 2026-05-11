@@ -1,0 +1,58 @@
+{
+    "id": "module_orders",
+    "name": "Narudžbine",
+    "type": "module",
+    "db_table_name": "orders",
+    "endpoint": "/api/modules/orders",
+    "display_field": "order_number",
+    "can_create": true,
+    "can_read": true,
+    "can_update": true,
+    "can_delete": true,
+    "columns": [
+        {
+            "id": "col_orders_id",
+            "name": "ID",
+            "db_column_name": "id",
+            "type": "integer",
+            "is_primary_key": true,
+            "is_visible": false
+        },
+        {
+            "id": "col_orders_number",
+            "name": "Broj narudžbine",
+            "db_column_name": "order_number",
+            "type": "string",
+            "is_editable": true,
+            "is_visible": true,
+            "validation": "required"
+        },
+        {
+            "id": "col_orders_customer_id",
+            "name": "Kupac",
+            "db_column_name": "customer_id",
+            "type": "lookup",
+            "is_editable": true,
+            "is_visible": true,
+            "lookup_module_id": "module_users",
+            "lookup_display_field": "username"
+        }
+    ],
+    "sub_modules": [
+        {
+            "target_module_id": "module_order_items",
+            "parent_key_field": "id",
+            "child_foreign_key_field": "order_id",
+            "display_name": "Stavke narudžbine",
+            "display_order": 1
+        },
+        {
+            "target_module_id": "module_comments",
+            "parent_key_field": "id",
+            "child_foreign_key_field": "parent_id",
+            "display_name": "Komentari Narudžbine",
+            "display_order": 2
+        }
+    ],
+    "is_table": true
+}

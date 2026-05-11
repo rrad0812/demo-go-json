@@ -1,0 +1,41 @@
+{
+    "id": "module_categories",
+    "name": "Kategorije",
+    "type": "module",
+    "db_table_name": "categories",
+    "endpoint": "/api/modules/categories",
+    "display_field": "name",
+    "can_create": true,
+    "can_read": true,
+    "can_update": true,
+    "can_delete": true,
+    "columns": [
+        {
+            "id": "col_categories_id",
+            "name": "ID",
+            "db_column_name": "id",
+            "type": "integer",
+            "is_primary_key": true,
+            "is_visible": false
+        },
+        {
+            "id": "col_categories_name",
+            "name": "Naziv Kategorije",
+            "db_column_name": "category_name",
+            "type": "string",
+            "is_editable": true,
+            "is_visible": true,
+            "validation": "required"
+        }
+    ],
+    "sub_modules": [
+        {
+            "target_module_id": "module_product_categories",
+            "parent_key_field": "id",
+            "child_foreign_key_field": "category_id",
+            "display_name": "Povezani proizvodi",
+            "display_order": 1
+        }
+    ],
+    "is_table": true
+}

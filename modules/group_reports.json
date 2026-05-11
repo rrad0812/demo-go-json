@@ -1,0 +1,25 @@
+{
+    "id": "group_reports",
+    "name": "Izveštaji",
+    "type": "group",
+    "properties": {
+        "icon": "fa-info-circle"
+    },
+    "sub_modules": [
+        {
+            "id": "product_categories_report",
+            "target_module_id": "module_product_with_categories_report",
+            "type": "report",
+            "display_name": "Izveštaj proizvodi sa kategorijama",
+            "display_order": 1
+        },
+        {
+            "id": "sales_report",
+            "target_module_id": "module_sales_report",
+            "type": "report",
+            "display_name": "Izveštaj o prodaji",
+            "display_order": 2
+        }
+    ],
+    "is_table": false
+}

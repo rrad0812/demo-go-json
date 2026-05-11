@@ -1,0 +1,17 @@
+{
+    "id": "group_journals",
+    "name": "Žurnali",
+    "type": "group",
+    "properties": {
+        "icon": "fa-book"
+    },
+    "sub_modules": [
+        {
+            "target_module_id": "module_orders",
+            "type": "module",
+            "display_name": "Narudžbine",
+            "display_order": 1
+        }
+    ],
+    "is_table": false
+}

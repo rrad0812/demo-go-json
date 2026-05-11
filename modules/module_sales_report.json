@@ -1,0 +1,24 @@
+{
+    "id": "module_sales_report",
+    "name": "Izveštaj o prodaji",
+    "type": "report",
+    "can_read": true,
+    "select_query": "SELECT product_name, SUM(quantity) as total_sold FROM sales GROUP BY product_name",
+    "columns": [
+        {
+            "id": "col_sales_product_name",
+            "name": "Naziv Proizvoda",
+            "db_column_name": "product_name",
+            "type": "string",
+            "is_visible": true
+        },
+        {
+            "id": "col_sales_total_sold",
+            "name": "Ukupno Prodato",
+            "db_column_name": "total_sold",
+            "type": "integer",
+            "is_visible": true
+        }
+    ],
+    "is_table": false
+}

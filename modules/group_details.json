@@ -1,0 +1,17 @@
+{
+    "id": "group_details",
+    "name": "Detalji",
+    "type": "group",
+    "properties": {
+        "icon": "fa-info-circle"
+    },
+    "sub_modules": [
+        {
+            "target_module_id": "module_order_items",
+            "type": "module",
+            "display_name": "Stavke narudžbina",
+            "display_order": 1
+        }
+    ],
+    "is_table": false
+}

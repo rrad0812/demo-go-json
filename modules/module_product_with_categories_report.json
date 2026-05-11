@@ -1,0 +1,53 @@
+{
+    "id": "module_product_with_categories_report",
+    "name": "Proizvodi po kategorijama",
+    "type": "report",
+    "can_read": true,
+    "db_table_name": "products",
+    "select_query": "SELECT p.id AS product_id_alias, p.name AS name, p.price, p.description, c.category_name AS category_name, c.id AS category_id_alias FROM products p JOIN product_categories pc ON p.id = pc.product_id JOIN categories c ON pc.category_id = c.id",
+    "columns": [
+        {
+            "id": "col_report_product_id",
+            "name": "ID Proizvoda",
+            "db_column_name": "product_id_alias",
+            "type": "integer",
+            "is_visible": true
+        },
+        {
+            "id": "col_report_product_name",
+            "name": "Naziv Proizvoda",
+            "db_column_name": "product_name",
+            "type": "string",
+            "is_visible": true
+        },
+        {
+            "id": "col_report_price",
+            "name": "Cena",
+            "db_column_name": "price",
+            "type": "float",
+            "is_visible": true
+        },
+        {
+            "id": "col_report_description",
+            "name": "Opis",
+            "db_column_name": "description",
+            "type": "string",
+            "is_visible": true
+        },
+        {
+            "id": "col_report_category_id",
+            "name": "ID Kategorije",
+            "db_column_name": "category_id_alias",
+            "type": "integer",
+            "is_visible": true
+        },
+        {
+            "id": "col_report_category_name",
+            "name": "Naziv Kategorije",
+            "db_column_name": "category_name",
+            "type": "string",
+            "is_visible": true
+        }
+    ],
+    "is_table": false
+}

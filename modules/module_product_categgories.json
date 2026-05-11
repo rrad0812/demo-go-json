@@ -1,0 +1,43 @@
+{
+    "id": "module_product_categories",
+    "name": "Veze Proizvod-Kategorija",
+    "type": "module",
+    "db_table_name": "product_categories",
+    "endpoint": "/api/modules/product_categories",
+    "display_field": "id",
+    "can_create": true,
+    "can_read": true,
+    "can_update": true,
+    "can_delete": true,
+    "columns": [
+        {
+            "id": "col_prodcat_id",
+            "name": "ID",
+            "db_column_name": "id",
+            "type": "integer",
+            "is_primary_key": true,
+            "is_visible": false
+        },
+        {
+            "id": "col_prodcat_product_id",
+            "name": "Proizvod",
+            "db_column_name": "product_id",
+            "type": "lookup",
+            "is_editable": true,
+            "is_visible": true,
+            "lookup_module_id": "module_products",
+            "lookup_display_field": "name"
+        },
+        {
+            "id": "col_prodcat_category_id",
+            "name": "Kategorija",
+            "db_column_name": "category_id",
+            "type": "lookup",
+            "is_editable": true,
+            "is_visible": true,
+            "lookup_module_id": "module_categories",
+            "lookup_display_field": "category_name"
+        }
+    ],
+    "is_table": true
+}
