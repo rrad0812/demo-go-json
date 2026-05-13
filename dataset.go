@@ -1619,6 +1619,19 @@ func (s *SQLDataset) getGrantedPermissionsMask(userID int64, resource string) (i
 }
 
 // GetUserByUsername pronalazi korisnika po korisničkom imenu
+func (s *SQLDataset) CreateUser(username, email, passwordHash string, isAdmin bool) (int64, error) {
+	var id int64
+	err := s.db.QueryRow(
+		`INSERT INTO users (username, email, password_hash, is_admin, created_at)
+		VALUES ($1, $2, $3, $4, NOW()) RETURNING id`,
+		username, email, passwordHash, isAdmin,
+	).Scan(&id)
+	if err != nil {
+		return 0, fmt.Errorf("greška pri kreiranju korisnika: %w", err)
+	}
+	return id, nil
+}
+
 func (s *SQLDataset) GetUserByUsername(username string) (*User, error) {
 	var user User
 	err := s.db.QueryRow(

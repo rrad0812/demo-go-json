@@ -339,6 +339,7 @@ func (s *APIServer) InitRoutes() {
 	s.router.HandleFunc("/api/modules/{moduleID}/{recordID}", s.UpdateRecord).Methods("PUT")
 	s.router.HandleFunc("/api/modules/{moduleID}/{recordID}", s.DeleteRecord).Methods("DELETE")
 	s.router.HandleFunc("/api/audit", s.GetAuditLogs).Methods("GET")
+	s.router.HandleFunc("/api/users", s.CreateUser).Methods("POST")
 }
 
 func (s *APIServer) HandlePreflight(w http.ResponseWriter, _ *http.Request) {
@@ -845,6 +846,51 @@ func (s *APIServer) GetAllModules(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	log.Println("INFO: Vraćena tree struktura modula.")
+}
+
+func (s *APIServer) CreateUser(w http.ResponseWriter, req *http.Request) {
+	session, ok := s.requireSession(w, req)
+	if !ok {
+		return
+	}
+	if !session.IsAdmin {
+		writeJSONError(w, http.StatusForbidden, "forbidden: only admin can create users")
+		return
+	}
+
+	var body struct {
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+		IsAdmin  bool   `json:"is_admin"`
+	}
+	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+		writeJSONError(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	if strings.TrimSpace(body.Username) == "" || strings.TrimSpace(body.Password) == "" {
+		writeJSONError(w, http.StatusBadRequest, "username and password are required")
+		return
+	}
+
+	hash, err := hashPassword(body.Password)
+	if err != nil {
+		writeJSONError(w, http.StatusInternalServerError, "failed to hash password")
+		return
+	}
+
+	id, err := s.dataset.CreateUser(body.Username, body.Email, hash, body.IsAdmin)
+	if err != nil {
+		writeJSONError(w, http.StatusInternalServerError, fmt.Sprintf("failed to create user: %v", err))
+		return
+	}
+
+	if err := writeJSON(w, http.StatusCreated, map[string]interface{}{
+		"message": "user created",
+		"id":      id,
+	}); err != nil {
+		log.Printf("ERROR: Greška pri enkodiranju odgovora: %v", err)
+	}
 }
 
 func (s *APIServer) GetAuditLogs(w http.ResponseWriter, req *http.Request) {
