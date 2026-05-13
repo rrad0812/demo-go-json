@@ -67,9 +67,9 @@ Znači zabranu pristupa konkretnom resursu.
 U praksi bi READ enforcement trebalo da blokira:
 
 - `GET /api/modules`
-- `GET /api/modules/{moduleID}`
-- `GET /api/modules/{moduleID}/{recordID}`
-- `GET /api/modules/{moduleID}/{recordID}/submodules/{submoduleID}`
+- `GET /api/{moduleID}`
+- `GET /api/{moduleID}/{recordID}`
+- `GET /api/{moduleID}/{recordID}/{submoduleID}`
 - i filtrira listu modula tako da vrati samo resurse nad kojima korisnik ima `READ`
 
 To ne znači zabranu login-a ili zabranu drugih modula na koje korisnik ima pravo.
@@ -112,6 +112,9 @@ Uvedene auth rute:
 - `POST /api/logout`
 - `GET /api/auth/session`
 - `POST /api/auth/csrf/refresh`
+
+Napomena: zbog kompatibilnosti su i dalje podržani stari alias endpointi
+`/login`, `/logout`, `/auth/session`, `/auth/csrf/refresh`, ali je preporuka da se koristi `/api/*` prefiks.
 
 ### `POST /api/login`
 
@@ -335,7 +338,7 @@ Napomena za vreme:
 6. Proveri liveness:
 
    ```bash
-   curl http://localhost:8080/health
+   curl http://localhost:8080/healthy
    ```
 
 7. Proveri readiness:
@@ -349,13 +352,13 @@ Napomena za vreme:
    ```bash
    curl -c cookies.txt -H "Content-Type: application/json" \
      -d '{"username":"admin","password":"admin"}' \
-     -X POST http://localhost:8080/login
+     -X POST http://localhost:8080/api/login
    ```
 
 9. Proveri session stanje:
 
    ```bash
-   curl -b cookies.txt http://localhost:8080/auth/session
+   curl -b cookies.txt http://localhost:8080/api/auth/session
    ```
 
 10. Testiraj jedan modul endpoint i audit endpoint.
@@ -386,7 +389,7 @@ Napomena za vreme:
 - Vraća:
   - JSON tree strukturu aplikacije, grupa i modula.
 
-### `GET /api/modules/{moduleID}`
+### `GET /api/{moduleID}`
 
 - Svrha:
   - Vraća listu zapisa ili izveštaj za jedan modul.
@@ -400,7 +403,7 @@ Napomena za vreme:
 - Vraća:
   - JSON niz zapisa.
 
-### `GET /api/modules/{moduleID}/{recordID}`
+### `GET /api/{moduleID}/{recordID}`
 
 - Svrha:
   - Vraća jedan zapis po ID-u.
@@ -409,7 +412,7 @@ Napomena za vreme:
 - Vraća:
   - JSON objekat jednog zapisa, uključujući ekspandovane `lookup` i `sub_modules` podatke ako su definisani.
 
-### `GET /api/modules/{moduleID}/{recordID}/submodules/{submoduleID}`
+### `GET /api/{moduleID}/{recordID}/{submoduleID}`
 
 - Svrha:
   - Vraća child zapise za konkretan parent zapis i definisani submodule odnos.
@@ -420,7 +423,7 @@ Napomena za vreme:
 - Vraća:
   - JSON objekat sa parent kontekstom, metadata opisom submodule veze i nizom child zapisa.
 
-### `GET /api/modules/{moduleID}/{recordID}/submodules/{submoduleID}/{childRecordID}`
+### `GET /api/{moduleID}/{recordID}/{submoduleID}/{childRecordID}`
 
 - Svrha:
   - Vraća jedan child zapis u kontekstu parent submodule relacije.
@@ -431,7 +434,7 @@ Napomena za vreme:
 - Vraća:
   - JSON objekat sa parent kontekstom, metadata opisom submodule veze i jednim child zapisom.
 
-### `POST /api/modules/{moduleID}/{recordID}/submodules/{submoduleID}`
+### `POST /api/{moduleID}/{recordID}/{submoduleID}`
 
 - Svrha:
   - Kreira child zapis vezan za parent zapis.
@@ -441,7 +444,7 @@ Napomena za vreme:
 - Vraća:
   - JSON poruku i ID novog child zapisa.
 
-### `PUT /api/modules/{moduleID}/{recordID}/submodules/{submoduleID}/{childRecordID}`
+### `PUT /api/{moduleID}/{recordID}/{submoduleID}/{childRecordID}`
 
 - Svrha:
   - Ažurira child zapis koji pripada parent zapisu.
@@ -453,7 +456,7 @@ Napomena za vreme:
 - Vraća:
   - JSON poruku o uspešnoj izmeni child zapisa.
 
-### `DELETE /api/modules/{moduleID}/{recordID}/submodules/{submoduleID}/{childRecordID}`
+### `DELETE /api/{moduleID}/{recordID}/{submoduleID}/{childRecordID}`
 
 - Svrha:
   - Briše child zapis koji pripada parent zapisu.
@@ -464,7 +467,7 @@ Napomena za vreme:
 - Vraća:
   - JSON poruku o uspešnom brisanju child zapisa.
 
-### `POST /api/modules/{moduleID}`
+### `POST /api/{moduleID}`
 
 - Svrha:
   - Kreira novi zapis za `moduleID` modul.
@@ -473,7 +476,7 @@ Napomena za vreme:
 - Vraća:
   - JSON sa ID-em ili porukom o uspehu, zavisno od handler toka.
 
-### `PUT /api/modules/{moduleID}/{recordID}`
+### `PUT /api/{moduleID}/{recordID}`
 
 - Svrha:
   - Ažurira postojeći zapis.
@@ -483,7 +486,7 @@ Napomena za vreme:
 - Vraća:
   - JSON poruku o uspehu.
 
-### `DELETE /api/modules/{moduleID}/{recordID}`
+### `DELETE /api/{moduleID}/{recordID}`
 
 - Svrha:
   - Soft-delete zapisa (`is_deleted = true`).
@@ -496,17 +499,17 @@ Napomena za vreme:
 
 Za sve `module` module važi isti obrazac poziva:
 
-- API lista: `/api/modules/{moduleID}`
-- API jedan zapis: `/api/modules/{moduleID}/{recordID}`
-- API submodule lista: `/api/modules/{moduleID}/{recordID}/submodules/{submoduleID}`
-- API submodule create: `POST /api/modules/{moduleID}/{recordID}/submodules/{submoduleID}`
-- API create: `POST /api/modules/{moduleID}`
-- API update: `PUT /api/modules/{moduleID}/{recordID}`
-- API delete: `DELETE /api/modules/{moduleID}/{recordID}`
+- API lista: `/api/{moduleID}`
+- API jedan zapis: `/api/{moduleID}/{recordID}`
+- API submodule lista: `/api/{moduleID}/{recordID}/{submoduleID}`
+- API submodule create: `POST /api/{moduleID}/{recordID}/{submoduleID}`
+- API create: `POST /api/{moduleID}`
+- API update: `PUT /api/{moduleID}/{recordID}`
+- API delete: `DELETE /api/{moduleID}/{recordID}`
 
 Za `report` module važi read-only obrazac:
 
-- API lista: `/api/modules/{moduleID}`
+- API lista: `/api/{moduleID}`
 
 ## Konkretna implementacija
 
@@ -651,11 +654,11 @@ Semantika polja:
 
 Trenutni nested API tok je:
 
-- `GET /api/modules/module_orders/1/submodules/module_order_items`
-- `GET /api/modules/module_orders/1/submodules/module_order_items/10`
-- `POST /api/modules/module_orders/1/submodules/module_order_items`
-- `PUT /api/modules/module_orders/1/submodules/module_order_items/10`
-- `DELETE /api/modules/module_orders/1/submodules/module_order_items/10`
+- `GET /api/module_orders/1/module_order_items`
+- `GET /api/module_orders/1/module_order_items/10`
+- `POST /api/module_orders/1/module_order_items`
+- `PUT /api/module_orders/1/module_order_items/10`
+- `DELETE /api/module_orders/1/module_order_items/10`
 
 Kod `POST` child FK se uvek uzima iz parent relacije i prepisuje preko eventualne vrednosti iz payload-a.
 
@@ -666,7 +669,7 @@ Kod `POST` child FK se uvek uzima iz parent relacije i prepisuje preko eventualn
 ```bash
 curl -c cookies.txt -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin"}' \
-  -X POST http://localhost:8080/login
+  -X POST http://localhost:8080/api/login
 ```
 
 Primer odgovora (skraćeno):
@@ -686,7 +689,7 @@ Primer odgovora (skraćeno):
 ### Session bootstrap
 
 ```bash
-curl -b cookies.txt http://localhost:8080/auth/session
+curl -b cookies.txt http://localhost:8080/api/auth/session
 ```
 
 ### CSRF refresh
@@ -694,19 +697,19 @@ curl -b cookies.txt http://localhost:8080/auth/session
 ```bash
 CSRF_TOKEN="<token-iz-login-odgovora-ili-auth-session>"
 curl -b cookies.txt -H "X-CSRF-Token: ${CSRF_TOKEN}" -X POST \
-  http://localhost:8080/auth/csrf/refresh
+  http://localhost:8080/api/auth/csrf/refresh
 ```
 
 ### Lista proizvoda
 
 ```bash
-curl -b cookies.txt http://localhost:8080/api/modules/module_products
+curl -b cookies.txt http://localhost:8080/api/module_products
 ```
 
 ### Lista proizvoda sa obrisanim zapisima
 
 ```bash
-curl -b cookies.txt http://localhost:8080/api/modules/module_products?includeDeleted=true
+curl -b cookies.txt http://localhost:8080/api/module_products?includeDeleted=true
 ```
 
 ### Kreiranje proizvoda
@@ -715,14 +718,14 @@ curl -b cookies.txt http://localhost:8080/api/modules/module_products?includeDel
 CSRF_TOKEN="<token-iz-login-odgovora-ili-auth-session>"
 curl -b cookies.txt -H "Content-Type: application/json" -H "X-CSRF-Token: ${CSRF_TOKEN}" -X POST \
   -d '{"name":"Test","price":99.5,"description":"Opis"}' \
-  http://localhost:8080/api/modules/module_products
+  http://localhost:8080/api/module_products
 ```
 
 ### Lista child zapisa za parent
 
 ```bash
 curl -b cookies.txt \
-  http://localhost:8080/api/modules/module_orders/1/submodules/module_order_items
+  http://localhost:8080/api/module_orders/1/module_order_items
 ```
 
 ### Kreiranje child zapisa kroz parent relaciju
@@ -731,14 +734,14 @@ curl -b cookies.txt \
 CSRF_TOKEN="<token-iz-login-odgovora-ili-auth-session>"
 curl -b cookies.txt -H "Content-Type: application/json" -H "X-CSRF-Token: ${CSRF_TOKEN}" -X POST \
   -d '{"product_id":2,"quantity":3}' \
-  http://localhost:8080/api/modules/module_orders/1/submodules/module_order_items
+  http://localhost:8080/api/module_orders/1/module_order_items
 ```
 
 ### Jedan child zapis kroz parent relaciju
 
 ```bash
 curl -b cookies.txt \
-  http://localhost:8080/api/modules/module_orders/1/submodules/module_order_items/10
+  http://localhost:8080/api/module_orders/1/module_order_items/10
 ```
 
 ### Ažuriranje child zapisa kroz parent relaciju
@@ -747,7 +750,7 @@ curl -b cookies.txt \
 CSRF_TOKEN="<token-iz-login-odgovora-ili-auth-session>"
 curl -b cookies.txt -H "Content-Type: application/json" -H "X-CSRF-Token: ${CSRF_TOKEN}" -X PUT \
   -d '{"quantity":5}' \
-  http://localhost:8080/api/modules/module_orders/1/submodules/module_order_items/10
+  http://localhost:8080/api/module_orders/1/module_order_items/10
 ```
 
 ### Brisanje child zapisa kroz parent relaciju
@@ -755,7 +758,7 @@ curl -b cookies.txt -H "Content-Type: application/json" -H "X-CSRF-Token: ${CSRF
 ```bash
 CSRF_TOKEN="<token-iz-login-odgovora-ili-auth-session>"
 curl -b cookies.txt -H "X-CSRF-Token: ${CSRF_TOKEN}" -X DELETE \
-  http://localhost:8080/api/modules/module_orders/1/submodules/module_order_items/10
+  http://localhost:8080/api/module_orders/1/module_order_items/10
 ```
 
 ### Ažuriranje proizvoda
@@ -764,7 +767,7 @@ curl -b cookies.txt -H "X-CSRF-Token: ${CSRF_TOKEN}" -X DELETE \
 CSRF_TOKEN="<token-iz-login-odgovora-ili-auth-session>"
 curl -b cookies.txt -X PUT -H "Content-Type: application/json" -H "X-CSRF-Token: ${CSRF_TOKEN}" \
   -d '{"name":"Novo ime","price":120}' \
-  http://localhost:8080/api/modules/module_products/1
+  http://localhost:8080/api/module_products/1
 ```
 
 ### Soft-delete proizvoda
@@ -772,14 +775,14 @@ curl -b cookies.txt -X PUT -H "Content-Type: application/json" -H "X-CSRF-Token:
 ```bash
 CSRF_TOKEN="<token-iz-login-odgovora-ili-auth-session>"
 curl -b cookies.txt -H "X-CSRF-Token: ${CSRF_TOKEN}" -X DELETE \
-  http://localhost:8080/api/modules/module_products/1
+  http://localhost:8080/api/module_products/1
 ```
 
 ### Logout
 
 ```bash
 CSRF_TOKEN="<token-iz-login-odgovora-ili-auth-session>"
-curl -b cookies.txt -H "X-CSRF-Token: ${CSRF_TOKEN}" -X POST http://localhost:8080/logout
+curl -b cookies.txt -H "X-CSRF-Token: ${CSRF_TOKEN}" -X POST http://localhost:8080/api/logout
 ```
 
 ## Trenutna ograničenja
