@@ -325,11 +325,18 @@ func (s *APIServer) InitRoutes() {
 	s.router.HandleFunc("/ready", s.Ready).Methods("GET")
 
 	// Auth and user management
+	s.router.HandleFunc("/login", s.Login).Methods("POST")
+	s.router.HandleFunc("/logout", s.Logout).Methods("POST")
+	s.router.HandleFunc("/auth/session", s.GetAuthSession).Methods("GET")
+	s.router.HandleFunc("/auth/csrf/refresh", s.RefreshCSRFToken).Methods("POST")
 	s.router.HandleFunc("/api/login", s.Login).Methods("POST")
 	s.router.HandleFunc("/api/logout", s.Logout).Methods("POST")
 	s.router.HandleFunc("/api/auth/session", s.GetAuthSession).Methods("GET")
 	s.router.HandleFunc("/api/auth/csrf/refresh", s.RefreshCSRFToken).Methods("POST")
 	s.router.HandleFunc("/api/users", s.CreateUser).Methods("POST")
+
+	// Audit
+	s.router.HandleFunc("/api/audit", s.GetAuditLogs).Methods("GET")
 
 	// Module management
 	s.router.HandleFunc("/api/modules", s.GetAllModules).Methods("GET")
@@ -351,9 +358,6 @@ func (s *APIServer) InitRoutes() {
 	s.router.HandleFunc("/api/{moduleID}/{recordID}/{submoduleID}/{childRecordID}", s.GetSubmoduleRecord).Methods("GET")
 	s.router.HandleFunc("/api/{moduleID}/{recordID}/{submoduleID}/{childRecordID}", s.UpdateSubmoduleRecord).Methods("PUT")
 	s.router.HandleFunc("/api/{moduleID}/{recordID}/{submoduleID}/{childRecordID}", s.DeleteSubmoduleRecord).Methods("DELETE")
-
-	// Audit
-	s.router.HandleFunc("/api/audit", s.GetAuditLogs).Methods("GET")
 }
 
 func (s *APIServer) HandlePreflight(w http.ResponseWriter, _ *http.Request) {
@@ -463,7 +467,7 @@ func (s *APIServer) isAllowedOrigin(origin string) bool {
 
 func (s *APIServer) csrfMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		if !requiresCSRFProtection(req.Method) || req.URL.Path == "/login" {
+		if !requiresCSRFProtection(req.Method) || req.URL.Path == "/login" || req.URL.Path == "/api/login" {
 			next.ServeHTTP(w, req)
 			return
 		}

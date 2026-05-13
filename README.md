@@ -108,12 +108,12 @@ Login je trenutno session-cookie model.
 
 Uvedene auth rute:
 
-- `POST /login`
-- `POST /logout`
-- `GET /auth/session`
-- `POST /auth/csrf/refresh`
+- `POST /api/login`
+- `POST /api/logout`
+- `GET /api/auth/session`
+- `POST /api/auth/csrf/refresh`
 
-### `POST /login`
+### `POST /api/login`
 
 - Svrha:
   - Prijavljuje korisnika i postavlja `session` i `csrf_token` cookie.
@@ -123,7 +123,7 @@ Uvedene auth rute:
 - Vraća:
   - JSON poruku, osnovne podatke o korisniku i `csrf_token`.
 
-### `POST /logout`
+### `POST /api/logout`
 
 - Svrha:
   - Briše aktivnu sesiju i cookie-je (`session`, `csrf_token`).
@@ -132,7 +132,7 @@ Uvedene auth rute:
 - Vraća:
   - JSON poruku o uspešnoj odjavi.
 
-### `GET /auth/session`
+### `GET /api/auth/session`
 
 - Svrha:
   - Vraća stanje aktivne sesije za već prijavljenog korisnika.
@@ -141,7 +141,7 @@ Uvedene auth rute:
 - Vraća:
   - `authenticated`, `user` i trenutni `csrf_token`.
 
-### `POST /auth/csrf/refresh`
+### `POST /api/auth/csrf/refresh`
 
 - Svrha:
   - Rotira CSRF token bez novog login-a.
@@ -158,7 +158,7 @@ Praktično:
 
 - `GET` rute ne traže CSRF header
 - mutacione rute sa sesijom bez CSRF header-a vraćaju `403`
-- posle `POST /auth/csrf/refresh` stari token je zamenjen novim
+- posle `POST /api/auth/csrf/refresh` stari token je zamenjen novim
 
 ## Security config (auth)
 
