@@ -52,7 +52,10 @@ func main() {
 	apiServer := NewAPIServer(appConfig, dataset) // Kreiramo instancu APIServera
 
 	// Postavljanje HTTP servera
-	serverAddr := ":8080" // Može se prebaciti u config
+	serverAddr := ":8080"
+	if port := strings.TrimSpace(os.Getenv("PORT")); port != "" {
+		serverAddr = ":" + port
+	}
 	srv := &http.Server{
 		Addr:    serverAddr,
 		Handler: apiServer.router, // Sada koristimo router iz APIServer instance

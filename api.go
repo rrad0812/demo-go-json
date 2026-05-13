@@ -324,6 +324,7 @@ func (s *APIServer) InitRoutes() {
 	s.router.HandleFunc("/auth/session", s.GetAuthSession).Methods("GET")
 	s.router.HandleFunc("/auth/csrf/refresh", s.RefreshCSRFToken).Methods("POST")
 	s.router.HandleFunc("/health", s.Health).Methods("GET")
+	s.router.HandleFunc("/healthy", s.Health).Methods("GET")
 	s.router.HandleFunc("/ready", s.Ready).Methods("GET")
 
 	s.router.HandleFunc("/api/modules", s.GetAllModules).Methods("GET")
