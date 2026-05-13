@@ -319,27 +319,41 @@ func (s *APIServer) InitRoutes() {
 	s.router.Use(s.csrfMiddleware)
 	s.router.PathPrefix("/").Methods(http.MethodOptions).HandlerFunc(s.HandlePreflight)
 
-	s.router.HandleFunc("/login", s.Login).Methods("POST")
-	s.router.HandleFunc("/logout", s.Logout).Methods("POST")
-	s.router.HandleFunc("/auth/session", s.GetAuthSession).Methods("GET")
-	s.router.HandleFunc("/auth/csrf/refresh", s.RefreshCSRFToken).Methods("POST")
+	// Health checks (accessible without auth)
 	s.router.HandleFunc("/health", s.Health).Methods("GET")
 	s.router.HandleFunc("/healthy", s.Health).Methods("GET")
 	s.router.HandleFunc("/ready", s.Ready).Methods("GET")
 
-	s.router.HandleFunc("/api/modules", s.GetAllModules).Methods("GET")
-	s.router.HandleFunc("/api/modules/{moduleID}", s.GetModuleRecords).Methods("GET")
-	s.router.HandleFunc("/api/modules/{moduleID}/{recordID}", s.GetSingleRecord).Methods("GET")
-	s.router.HandleFunc("/api/modules/{moduleID}/{recordID}/submodules/{submoduleID}", s.GetSubmoduleRecords).Methods("GET")
-	s.router.HandleFunc("/api/modules/{moduleID}/{recordID}/submodules/{submoduleID}/{childRecordID}", s.GetSubmoduleRecord).Methods("GET")
-	s.router.HandleFunc("/api/modules/{moduleID}/{recordID}/submodules/{submoduleID}", s.CreateSubmoduleRecord).Methods("POST")
-	s.router.HandleFunc("/api/modules/{moduleID}/{recordID}/submodules/{submoduleID}/{childRecordID}", s.UpdateSubmoduleRecord).Methods("PUT")
-	s.router.HandleFunc("/api/modules/{moduleID}/{recordID}/submodules/{submoduleID}/{childRecordID}", s.DeleteSubmoduleRecord).Methods("DELETE")
-	s.router.HandleFunc("/api/modules/{moduleID}", s.CreateRecord).Methods("POST")
-	s.router.HandleFunc("/api/modules/{moduleID}/{recordID}", s.UpdateRecord).Methods("PUT")
-	s.router.HandleFunc("/api/modules/{moduleID}/{recordID}", s.DeleteRecord).Methods("DELETE")
-	s.router.HandleFunc("/api/audit", s.GetAuditLogs).Methods("GET")
+	// Auth and user management
+	s.router.HandleFunc("/api/login", s.Login).Methods("POST")
+	s.router.HandleFunc("/api/logout", s.Logout).Methods("POST")
+	s.router.HandleFunc("/api/auth/session", s.GetAuthSession).Methods("GET")
+	s.router.HandleFunc("/api/auth/csrf/refresh", s.RefreshCSRFToken).Methods("POST")
 	s.router.HandleFunc("/api/users", s.CreateUser).Methods("POST")
+
+	// Module management
+	s.router.HandleFunc("/api/modules", s.GetAllModules).Methods("GET")
+
+	// Records: GET all, POST create
+	s.router.HandleFunc("/api/{moduleID}", s.GetModuleRecords).Methods("GET")
+	s.router.HandleFunc("/api/{moduleID}", s.CreateRecord).Methods("POST")
+
+	// Single record: GET, PUT, DELETE
+	s.router.HandleFunc("/api/{moduleID}/{recordID}", s.GetSingleRecord).Methods("GET")
+	s.router.HandleFunc("/api/{moduleID}/{recordID}", s.UpdateRecord).Methods("PUT")
+	s.router.HandleFunc("/api/{moduleID}/{recordID}", s.DeleteRecord).Methods("DELETE")
+
+	// Submodule records: GET all, POST create
+	s.router.HandleFunc("/api/{moduleID}/{recordID}/{submoduleID}", s.GetSubmoduleRecords).Methods("GET")
+	s.router.HandleFunc("/api/{moduleID}/{recordID}/{submoduleID}", s.CreateSubmoduleRecord).Methods("POST")
+
+	// Single submodule record: GET, PUT, DELETE
+	s.router.HandleFunc("/api/{moduleID}/{recordID}/{submoduleID}/{childRecordID}", s.GetSubmoduleRecord).Methods("GET")
+	s.router.HandleFunc("/api/{moduleID}/{recordID}/{submoduleID}/{childRecordID}", s.UpdateSubmoduleRecord).Methods("PUT")
+	s.router.HandleFunc("/api/{moduleID}/{recordID}/{submoduleID}/{childRecordID}", s.DeleteSubmoduleRecord).Methods("DELETE")
+
+	// Audit
+	s.router.HandleFunc("/api/audit", s.GetAuditLogs).Methods("GET")
 }
 
 func (s *APIServer) HandlePreflight(w http.ResponseWriter, _ *http.Request) {
